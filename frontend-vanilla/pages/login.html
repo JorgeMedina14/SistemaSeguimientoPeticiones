@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - Sistema de Peticiones</title>
+  
+  <!-- CSS -->
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+  <div class="layout-centered">
+    <div class="login-card">
+      <!-- Header -->
+      <div class="login-header">
+        <img src="../assets/icons/logo.svg" alt="Logo Municipalidad" class="site-logo">
+        <div>
+          <h1>Sistema de Peticiones</h1>
+          <p>Municipalidad de Jalapa</p>
+        </div>
+      </div>
+
+      <!-- Error container -->
+      <div id="error-container" class="hidden"></div>
+
+      <!-- Formulario -->
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Usuario</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            required 
+            autocomplete="username"
+            placeholder="Ingrese su usuario"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            required 
+            autocomplete="current-password"
+            placeholder="Ingrese su contraseña"
+          >
+        </div>
+
+        <button type="submit" id="login-btn" class="btn btn-primary btn-block">
+          Iniciar Sesión
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <p class="text-muted">
+          <small>© 2026 Municipalidad de Jalapa</small>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/ui.js"></script>
+  <script src="../js/pages/login.js"></script>
+</body>
+</html>
