@@ -1,107 +1,47 @@
 const reportesService = require('../services/reportes.service');
 
-const resumen = async (req, res) => {
+const fail = (res, error, fallback) => {
+  const status = error.status || 500;
+  return res.status(status).json({
+    success: false,
+    message: error.message || fallback
+  });
+};
+
+const withFechas = (fn, fallback) => async (req, res) => {
   try {
     const { fechaInicio, fechaFin } = req.query;
-    const datos = await reportesService.obtenerResumen(fechaInicio, fechaFin);
-    
+    const datos = await fn(fechaInicio, fechaFin);
     return res.status(200).json({
       success: true,
       data: datos
     });
-    
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al obtener resumen de peticiones';
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error, fallback);
   }
 };
 
-const porDepartamento = async (req, res) => {
+const resumen = withFechas(reportesService.obtenerResumen, 'Error al obtener resumen de peticiones');
+const porDepartamento = withFechas(reportesService.obtenerPorDepartamento, 'Error al obtener reporte por departamento');
+const tiempos = withFechas(reportesService.obtenerTiempos, 'Error al obtener tiempos promedio');
+const dashboard = withFechas(async (fechaInicio, fechaFin) => {
   try {
-    const { fechaInicio, fechaFin } = req.query;
-    const datos = await reportesService.obtenerPorDepartamento(fechaInicio, fechaFin);
-    
-    return res.status(200).json({
-      success: true,
-      data: datos
-    });
-    
+    return await reportesService.obtenerDashboard(fechaInicio, fechaFin);
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al obtener reporte por departamento';
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    console.error('Error en controller.reportes.dashboard:', error);
+    throw error;
   }
-};
-
-const tiempos = async (req, res) => {
-  try {
-    const { fechaInicio, fechaFin } = req.query;
-    const datos = await reportesService.obtenerTiempos(fechaInicio, fechaFin);
-    
-    return res.status(200).json({
-      success: true,
-      data: datos
-    });
-    
-  } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al obtener tiempos promedio';
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
-  }
-};
+}, 'Error al obtener dashboard');
 
 const ciudadanosFrecuentes = async (req, res) => {
   try {
     const resultado = await reportesService.obtenerCiudadanosFrecuentes(req.query);
-    
     return res.status(200).json({
       success: true,
       ...resultado
     });
-    
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al obtener ciudadanos frecuentes';
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
-  }
-};
-
-const dashboard = async (req, res) => {
-  try {
-    const { fechaInicio, fechaFin } = req.query;
-    const datos = await reportesService.obtenerDashboard(fechaInicio, fechaFin);
-    
-    return res.status(200).json({
-      success: true,
-      data: datos
-    });
-    
-  } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al obtener dashboard';
-    console.error('Error en controller.reportes.dashboard:', error);
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error, 'Error al obtener ciudadanos frecuentes');
   }
 };
 

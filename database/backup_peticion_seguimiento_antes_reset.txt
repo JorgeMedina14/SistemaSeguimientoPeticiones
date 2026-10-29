@@ -1,0 +1,75 @@
+tag
+---
+BACKUP_PETICION
+
+(1 rows affected)
+IdPeticion|Codigo|IdCiudadano|IdDepartamento|CreadoPorUsuarioId|Titulo|Descripcion|Estado|Prioridad|FechaCreacion|FechaLimite|FechaCierre
+----------|------|-----------|--------------|------------------|------|-----------|------|---------|-------------|-----------|-----------
+10006|JAL-2026-000010|1009|4|2|DERRUMBE|NECESITAMOS CONSTRUCCION DE UN PUENTE|RECIBIDA|MEDIA|2026-07-13 22:35:46|NULL|NULL
+10009|JAL-2026-000013|1012|4|1009|Agua ausente|No hay agua en este sector.|RECIBIDA|ALTA|2026-07-18 07:34:18|NULL|NULL
+10010|JAL-2026-000014|1013|5|2|baja  energia electrica|Energia eletrica baja en el sector de Z1|ASIGNADA|ALTA|2026-09-23 13:44:12|NULL|NULL
+10011|JAL-2026-000015|1014|5|2|Baja energia Electrica|Energia electrica baja en mi zona|EN_PROCESO|MEDIA|2026-09-26 11:41:22|NULL|NULL
+10012|JAL-2026-000016|1015|2|1009|Peticion prueba tesis|Descripcion de prueba automatizada|EN_REVISION|MEDIA|2026-10-14 22:29:18|NULL|NULL
+10013|JAL-2026-000017|1015|2|1009|Segunda peticion mismo DPI|Debe reutilizar ciudadano|RECIBIDA|BAJA|2026-10-14 22:29:18|NULL|NULL
+10015|JAL-2026-000018|1017|2|1009|Peticion prueba tesis|Descripcion de prueba automatizada|EN_REVISION|MEDIA|2026-10-14 22:29:41|NULL|NULL
+10016|JAL-2026-000019|1017|2|1009|Segunda peticion mismo DPI|Debe reutilizar ciudadano|RECIBIDA|BAJA|2026-10-14 22:29:41|NULL|NULL
+10018|JAL-2026-000020|1019|3|2|E2E alcalde 1792038582151|Peticion creada por prueba automatica de roles|CERRADA|MEDIA|2026-10-14 22:29:42|NULL|2026-10-14 22:53:44
+10019|JAL-2026-000021|1020|3|1009|E2E recepcion 1792038582352|Peticion creada por prueba automatica de roles|RECIBIDA|MEDIA|2026-10-14 22:29:42|NULL|NULL
+10020|JAL-2026-000022|1021|2|2|Documento Final|Documento Final PGII|RESUELTA|MEDIA|2026-10-14 22:57:45|NULL|2026-10-14 22:59:27
+10021|JAL-2026-000023|1022|2|1009|Peticion prueba tesis|Descripcion de prueba automatizada|EN_REVISION|MEDIA|2026-10-14 23:07:10|NULL|NULL
+10022|JAL-2026-000024|1022|2|1009|Segunda peticion mismo DPI|Debe reutilizar ciudadano|RECIBIDA|BAJA|2026-10-14 23:07:10|NULL|NULL
+10024|JAL-2026-000025|1024|2|1009|Peticion prueba tesis|Descripcion de prueba automatizada|EN_REVISION|MEDIA|2026-10-14 23:07:56|NULL|NULL
+10025|JAL-2026-000026|1024|2|1009|Segunda peticion mismo DPI|Debe reutilizar ciudadano|RECIBIDA|BAJA|2026-10-14 23:07:56|NULL|NULL
+
+(15 rows affected)
+tag
+---
+BACKUP_SEGUIMIENTO
+
+(1 rows affected)
+IdSeguimiento|IdPeticion|IdUsuario|EstadoAnterior|EstadoNuevo|Comentario|FechaMovimiento
+-------------|----------|---------|--------------|-----------|----------|---------------
+10016|10006|2|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-07-13 22:35:46
+10021|10009|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-07-18 07:34:18
+10022|10010|2|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-09-23 13:44:12
+10023|10010|2|RECIBIDA|EN_REVISION||2026-09-23 13:44:17
+10024|10010|2|EN_REVISION|ASIGNADA||2026-09-23 13:44:37
+10025|10011|2|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-09-26 11:41:22
+10026|10011|1012|RECIBIDA|EN_PROCESO|En proceso de solucion|2026-09-26 11:42:54
+10027|10012|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 22:29:18
+10028|10013|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 22:29:18
+10029|10012|2|RECIBIDA|EN_REVISION|Prueba tesis|2026-10-14 22:29:18
+10030|10015|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 22:29:41
+10031|10016|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 22:29:41
+10032|10015|2|RECIBIDA|EN_REVISION|Prueba tesis|2026-10-14 22:29:41
+10033|10018|2|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 22:29:42
+10034|10018|2|RECIBIDA|EN_REVISION|E2E cambio estado|2026-10-14 22:29:42
+10035|10019|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 22:29:42
+10036|10018|2|EN_REVISION|RESUELTA||2026-10-14 22:53:29
+10037|10018|2|RESUELTA|CERRADA||2026-10-14 22:53:44
+10038|10020|2|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 22:57:45
+10039|10020|2|RECIBIDA|EN_PROCESO|Documento Final en proceso|2026-10-14 22:58:29
+10040|10020|2|EN_PROCESO|RESUELTA|Documento Final resuellto|2026-10-14 22:59:27
+10041|10021|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 23:07:10
+10042|10022|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 23:07:10
+10043|10021|2|RECIBIDA|EN_REVISION|Prueba tesis|2026-10-14 23:07:10
+10044|10024|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 23:07:56
+10045|10025|1009|NULL|RECIBIDA|Petición creada y recibida en el sistema|2026-10-14 23:07:56
+10046|10024|2|RECIBIDA|EN_REVISION|Prueba tesis|2026-10-14 23:07:56
+
+(27 rows affected)
+tag
+---
+BACKUP_COUNTS
+
+(1 rows affected)
+TotalPeticiones
+---------------
+15
+
+(1 rows affected)
+TotalSeguimientos
+-----------------
+27
+
+(1 rows affected)

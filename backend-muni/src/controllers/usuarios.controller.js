@@ -1,5 +1,15 @@
 const usuariosService = require('../services/usuarios.service');
 
+const fail = (res, error, status = 400) => {
+  res.status(status).json({
+    success: false,
+    mensaje: error.message
+  });
+};
+
+const failUsuario = (res, error) =>
+  fail(res, error, error.message === 'Usuario no encontrado' ? 404 : 400);
+
 const crear = async (req, res) => {
   try {
     const nuevoUsuario = await usuariosService.crearUsuario(req.body);
@@ -9,10 +19,7 @@ const crear = async (req, res) => {
       mensaje: 'Usuario creado exitosamente'
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      mensaje: error.message
-    });
+    fail(res, error);
   }
 };
 
@@ -21,43 +28,30 @@ const listar = async (req, res) => {
     const resultado = await usuariosService.listarUsuarios(req.query);
     res.status(200).json({
       success: true,
-      data: resultado.data,
-      total: resultado.total,
-      page: resultado.page,
-      limit: resultado.limit,
-      totalPages: resultado.totalPages
+      ...resultado
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      mensaje: error.message
-    });
+    fail(res, error);
   }
 };
 
 const obtenerPorId = async (req, res) => {
   try {
-    const { id } = req.params;
-    const usuario = await usuariosService.obtenerUsuarioPorId(parseInt(id));
+    const usuario = await usuariosService.obtenerUsuarioPorId(parseInt(req.params.id));
     res.status(200).json({
       success: true,
       data: usuario
     });
   } catch (error) {
-    const status = error.message === 'Usuario no encontrado' ? 404 : 400;
-    res.status(status).json({
-      success: false,
-      mensaje: error.message
-    });
+    failUsuario(res, error);
   }
 };
 
 const actualizar = async (req, res) => {
   try {
-    const { id } = req.params;
     const usuarioActualizado = await usuariosService.actualizarUsuario(
-      parseInt(id), 
-      req.body, 
+      parseInt(req.params.id),
+      req.body,
       req.user
     );
     res.status(200).json({
@@ -66,29 +60,24 @@ const actualizar = async (req, res) => {
       mensaje: 'Usuario actualizado exitosamente'
     });
   } catch (error) {
-    const status = error.message === 'Usuario no encontrado' ? 404 : 400;
-    res.status(status).json({
-      success: false,
-      mensaje: error.message
-    });
+    failUsuario(res, error);
   }
 };
 
 const cambiarActivo = async (req, res) => {
   try {
-    const { id } = req.params;
     const { activo } = req.body;
-    
+
     if (activo === undefined) {
       return res.status(400).json({
         success: false,
         mensaje: 'El campo activo es requerido'
       });
     }
-    
+
     const resultado = await usuariosService.cambiarActivoUsuario(
-      parseInt(id), 
-      activo, 
+      parseInt(req.params.id),
+      activo,
       req.user
     );
     res.status(200).json({
@@ -97,28 +86,23 @@ const cambiarActivo = async (req, res) => {
       mensaje: 'Estado del usuario actualizado exitosamente'
     });
   } catch (error) {
-    const status = error.message === 'Usuario no encontrado' ? 404 : 400;
-    res.status(status).json({
-      success: false,
-      mensaje: error.message
-    });
+    failUsuario(res, error);
   }
 };
 
 const cambiarPassword = async (req, res) => {
   try {
-    const { id } = req.params;
     const { nuevaPassword } = req.body;
-    
+
     if (!nuevaPassword) {
       return res.status(400).json({
         success: false,
         mensaje: 'El campo nuevaPassword es requerido'
       });
     }
-    
+
     const resultado = await usuariosService.cambiarPasswordUsuario(
-      parseInt(id), 
+      parseInt(req.params.id),
       nuevaPassword
     );
     res.status(200).json({
@@ -126,38 +110,28 @@ const cambiarPassword = async (req, res) => {
       mensaje: resultado.mensaje
     });
   } catch (error) {
-    const status = error.message === 'Usuario no encontrado' ? 404 : 400;
-    res.status(status).json({
-      success: false,
-      mensaje: error.message
-    });
+    failUsuario(res, error);
   }
 };
 
 const eliminar = async (req, res) => {
   try {
     const { id } = req.params;
-    const idUsuarioAutenticado = req.user.idUsuario;
-    
-    // Evitar que se elimine a sí mismo
-    if (parseInt(id) === idUsuarioAutenticado) {
+
+    if (parseInt(id) === req.user.idUsuario) {
       return res.status(400).json({
         success: false,
         mensaje: 'No puedes eliminar tu propia cuenta'
       });
     }
-    
+
     const resultado = await usuariosService.eliminarUsuario(parseInt(id), req.user);
     res.status(200).json({
       success: true,
       mensaje: resultado.mensaje
     });
   } catch (error) {
-    const status = error.message === 'Usuario no encontrado' ? 404 : 400;
-    res.status(status).json({
-      success: false,
-      mensaje: error.message
-    });
+    failUsuario(res, error);
   }
 };
 

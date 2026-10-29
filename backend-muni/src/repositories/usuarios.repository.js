@@ -1,5 +1,24 @@
 const { getPool } = require('../db/pool');
-const sql = require('mssql');
+const sql = require('../db/sql');
+
+const mapUsuario = (r) => ({
+  idUsuario: r.IdUsuario,
+  idDepartamento: r.IdDepartamento,
+  username: r.Username,
+  nombreCompleto: r.NombreCompleto,
+  rol: r.Rol,
+  activo: r.Activo,
+  fechaCreacion: r.FechaCreacion,
+  fechaUltimoAcceso: r.FechaUltimoAcceso,
+  departamento: r.NombreDepartamento
+});
+
+const bindFiltrosUsuario = (request, { rol, activo, departamento }) => {
+  if (rol) request.input('rol', sql.VarChar(20), rol);
+  if (activo !== undefined) request.input('activo', sql.Bit, activo === 'true' || activo === true ? 1 : 0);
+  if (departamento) request.input('departamento', sql.Int, departamento);
+  return request;
+};
 
 const createUsuario = async (userData) => {
   const pool = await getPool();
@@ -30,30 +49,14 @@ const findAllUsuarios = async (filtros) => {
   
   const { page, limit, rol, activo, departamento } = filtros;
   
-  let whereConditions = [];
-  const request = pool.request();
-  
-  if (rol) {
-    whereConditions.push('u.Rol = @rol');
-    request.input('rol', sql.VarChar(20), rol);
-  }
-  
-  if (activo !== undefined) {
-    whereConditions.push('u.Activo = @activo');
-    request.input('activo', sql.Bit, activo === 'true' || activo === true ? 1 : 0);
-  }
-  
-  if (departamento) {
-    whereConditions.push('u.IdDepartamento = @departamento');
-    request.input('departamento', sql.Int, departamento);
-  }
-  
+  const whereConditions = [];
+  if (rol) whereConditions.push('u.Rol = @rol');
+  if (activo !== undefined) whereConditions.push('u.Activo = @activo');
+  if (departamento) whereConditions.push('u.IdDepartamento = @departamento');
+
   const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
-  
-  const countRequest = pool.request();
-  if (rol) countRequest.input('rol', sql.VarChar(20), rol);
-  if (activo !== undefined) countRequest.input('activo', sql.Bit, activo === 'true' || activo === true ? 1 : 0);
-  if (departamento) countRequest.input('departamento', sql.Int, departamento);
+  const request = bindFiltrosUsuario(pool.request(), filtros);
+  const countRequest = bindFiltrosUsuario(pool.request(), filtros);
   
   const countResult = await countRequest.query(`
     SELECT COUNT(*) AS Total
@@ -87,17 +90,7 @@ const findAllUsuarios = async (filtros) => {
   `);
   
   return {
-    data: result.recordset.map(r => ({
-      idUsuario: r.IdUsuario,
-      idDepartamento: r.IdDepartamento,
-      username: r.Username,
-      nombreCompleto: r.NombreCompleto,
-      rol: r.Rol,
-      activo: r.Activo,
-      fechaCreacion: r.FechaCreacion,
-      fechaUltimoAcceso: r.FechaUltimoAcceso,
-      departamento: r.NombreDepartamento
-    })),
+    data: result.recordset.map(mapUsuario),
     total,
     page: pageNum,
     limit: limitNum,
@@ -128,19 +121,8 @@ const findUsuarioById = async (idUsuario) => {
   if (result.recordset.length === 0) {
     return null;
   }
-  
-  const r = result.recordset[0];
-  return {
-    idUsuario: r.IdUsuario,
-    idDepartamento: r.IdDepartamento,
-    username: r.Username,
-    nombreCompleto: r.NombreCompleto,
-    rol: r.Rol,
-    activo: r.Activo,
-    fechaCreacion: r.FechaCreacion,
-    fechaUltimoAcceso: r.FechaUltimoAcceso,
-    departamento: r.NombreDepartamento
-  };
+
+  return mapUsuario(result.recordset[0]);
 };
 
 const updateUsuario = async (idUsuario, userData) => {

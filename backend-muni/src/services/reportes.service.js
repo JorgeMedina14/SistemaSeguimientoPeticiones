@@ -42,103 +42,77 @@ const validarFechas = (fechaInicio, fechaFin) => {
 };
 
 const obtenerResumen = async (fechaInicio, fechaFin) => {
-  try {
-    const { fechaInicio: fInicio, fechaFin: fFin } = validarFechas(fechaInicio, fechaFin);
-    
-    const resumen = await reportesRepository.getResumenGeneral(fInicio, fFin);
-    
-    let porcentajeResueltas = 0;
-    let porcentajePendientes = 0;
-    
-    if (resumen.totalPeticiones > 0) {
-      porcentajeResueltas = parseFloat(((resumen.totalResueltas / resumen.totalPeticiones) * 100).toFixed(2));
-      porcentajePendientes = parseFloat(((resumen.totalPendientes / resumen.totalPeticiones) * 100).toFixed(2));
-    }
-    
-    const tiempos = await reportesRepository.getTiemposPromedio(fInicio, fFin);
-    
-    return {
-      totalPeticiones: resumen.totalPeticiones,
-      porcentajeResueltas,
-      porcentajePendientes,
-      promedioDiasResolucion: tiempos.promedioDias,
-      porEstado: resumen.porEstado,
-      porPrioridad: resumen.porPrioridad
-    };
-  } catch (error) {
-    throw error;
+  validarFechas(fechaInicio, fechaFin);
+
+  const resumen = await reportesRepository.getResumenGeneral(fechaInicio, fechaFin);
+  
+  let porcentajeResueltas = 0;
+  let porcentajePendientes = 0;
+  
+  if (resumen.totalPeticiones > 0) {
+    porcentajeResueltas = parseFloat(((resumen.totalResueltas / resumen.totalPeticiones) * 100).toFixed(1));
+    porcentajePendientes = parseFloat(((resumen.totalPendientes / resumen.totalPeticiones) * 100).toFixed(1));
   }
+  
+  const tiempos = await reportesRepository.getTiemposPromedio(fechaInicio, fechaFin);
+  
+  return {
+    totalPeticiones: resumen.totalPeticiones,
+    porcentajeResueltas,
+    porcentajePendientes,
+    promedioDiasResolucion: tiempos.promedioDias,
+    porEstado: resumen.porEstado,
+    porPrioridad: resumen.porPrioridad
+  };
 };
 
 const obtenerPorDepartamento = async (fechaInicio, fechaFin) => {
-  try {
-    const { fechaInicio: fInicio, fechaFin: fFin } = validarFechas(fechaInicio, fechaFin);
-    const datos = await reportesRepository.getPorDepartamento(fInicio, fFin);
-    return datos;
-  } catch (error) {
-    throw error;
-  }
+  validarFechas(fechaInicio, fechaFin);
+  return reportesRepository.getPorDepartamento(fechaInicio, fechaFin);
 };
 
 const obtenerTiempos = async (fechaInicio, fechaFin) => {
-  try {
-    const { fechaInicio: fInicio, fechaFin: fFin } = validarFechas(fechaInicio, fechaFin);
-    const tiempos = await reportesRepository.getTiemposPromedio(fInicio, fFin);
-    return tiempos;
-  } catch (error) {
-    throw error;
-  }
+  validarFechas(fechaInicio, fechaFin);
+  return reportesRepository.getTiemposPromedio(fechaInicio, fechaFin);
 };
 
 const obtenerCiudadanosFrecuentes = async (query) => {
-  try {
-    const { top, page, limit, fechaInicio, fechaFin, estado, q } = query;
-    
-    if (fechaInicio && fechaFin) {
-      validarFechas(fechaInicio, fechaFin);
-    }
-    
-    const topNum = top ? parseInt(top) : null;
-    const pageNum = page ? parseInt(page) : null;
-    const limitNum = limit ? parseInt(limit) : null;
-    
-    if (topNum && topNum < 1) {
-      throw { status: 400, message: 'top debe ser mayor o igual a 1' };
-    }
-    
-    if (pageNum && pageNum < 1) {
-      throw { status: 400, message: 'page debe ser mayor o igual a 1' };
-    }
-    
-    if (limitNum && limitNum < 1) {
-      throw { status: 400, message: 'limit debe ser mayor o igual a 1' };
-    }
-    
-    const filtros = {
-      top: topNum,
-      page: pageNum,
-      limit: limitNum,
-      fechaInicio,
-      fechaFin,
-      estado,
-      q
-    };
-    
-    const resultado = await reportesRepository.getCiudadanosFrecuentes(filtros);
-    return resultado;
-  } catch (error) {
-    throw error;
+  const { top, page, limit, fechaInicio, fechaFin, estado, q } = query;
+  
+  if (fechaInicio && fechaFin) {
+    validarFechas(fechaInicio, fechaFin);
   }
+  
+  const topNum = top ? parseInt(top, 10) : null;
+  const pageNum = page ? parseInt(page, 10) : null;
+  const limitNum = limit ? parseInt(limit, 10) : null;
+  
+  if (topNum && topNum < 1) {
+    throw { status: 400, message: 'top debe ser mayor o igual a 1' };
+  }
+  
+  if (pageNum && pageNum < 1) {
+    throw { status: 400, message: 'page debe ser mayor o igual a 1' };
+  }
+  
+  if (limitNum && limitNum < 1) {
+    throw { status: 400, message: 'limit debe ser mayor o igual a 1' };
+  }
+  
+  return reportesRepository.getCiudadanosFrecuentes({
+    top: topNum,
+    page: pageNum,
+    limit: limitNum,
+    fechaInicio,
+    fechaFin,
+    estado,
+    q
+  });
 };
 
 const obtenerDashboard = async (fechaInicio, fechaFin) => {
-  try {
-    const { fechaInicio: fInicio, fechaFin: fFin } = validarFechas(fechaInicio, fechaFin);
-    const dashboard = await reportesRepository.getDashboardOverview(fInicio, fFin);
-    return dashboard;
-  } catch (error) {
-    throw error;
-  }
+  validarFechas(fechaInicio, fechaFin);
+  return reportesRepository.getDashboardOverview(fechaInicio, fechaFin);
 };
 
 module.exports = {

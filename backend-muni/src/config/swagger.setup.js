@@ -26,4 +26,4 @@ function setupSwagger(app) {
   );
 }
 
-module.exports = { setupSwagger, SWAGGER_UI_PATH, SWAGGER_JSON_PATH };
+module.exports = { setupSwagger };

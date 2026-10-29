@@ -239,9 +239,12 @@ const openapiSpec = {
       get: {
         tags: ['Sistema'],
         summary: 'Ping base de datos',
-        description: 'Verifica conexión a SQL Server',
+        description: 'Verifica conexión a SQL Server. Requiere JWT y rol ADMIN.',
+        security: [{ bearerAuth: [] }],
         responses: {
           200: { description: 'Conexión OK' },
+          401: { description: 'No autenticado' },
+          403: { description: 'Sin permiso (solo ADMIN)' },
           500: { description: 'Error de conexión' }
         }
       }

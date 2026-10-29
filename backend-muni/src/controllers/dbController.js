@@ -1,15 +1,16 @@
 const { getPool } = require('../db/pool');
+const dbConfig = require('../config/db');
 
 const pingDatabase = async (req, res) => {
   try {
     const pool = await getPool();
     const result = await pool.request().query('SELECT 1 AS Resultado');
-    
+
     res.status(200).json({
       success: true,
       message: 'Conexión exitosa a SQL Server',
-      server: 'JORGE\\SQLDEVELOPER',
-      database: 'MuniPeticionesJalapa',
+      server: dbConfig.server,
+      database: dbConfig.database,
       result: result.recordset[0]
     });
   } catch (error) {
@@ -17,8 +18,9 @@ const pingDatabase = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error al conectar con SQL Server',
-      error: error.message || String(error),
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: process.env.NODE_ENV === 'development'
+        ? (error.message || String(error))
+        : 'No se pudo establecer la conexión'
     });
   }
 };

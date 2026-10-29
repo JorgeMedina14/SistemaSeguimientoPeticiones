@@ -15,20 +15,14 @@ const server = app.listen(PORT, () => {
   console.log('='.repeat(50));
 });
 
-process.on('SIGTERM', async () => {
-  console.log('SIGTERM recibido. Cerrando servidor...');
+const shutdown = async (label) => {
+  console.log(label);
   await closePool();
   server.close(() => {
     console.log('Servidor cerrado correctamente');
     process.exit(0);
   });
-});
+};
 
-process.on('SIGINT', async () => {
-  console.log('\nSIGINT recibido. Cerrando servidor...');
-  await closePool();
-  server.close(() => {
-    console.log('Servidor cerrado correctamente');
-    process.exit(0);
-  });
-});
+process.on('SIGTERM', () => shutdown('SIGTERM recibido. Cerrando servidor...'));
+process.on('SIGINT', () => shutdown('\nSIGINT recibido. Cerrando servidor...'));

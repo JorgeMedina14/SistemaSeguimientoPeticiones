@@ -1,0 +1,63 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.32rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Familia navy */
+.badge-info,
+.badge-primary {
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+  border-color: rgba(26, 74, 102, 0.15);
+}
+
+.badge-process {
+  background: #e0e8ef;
+  color: #2d4658;
+  border-color: rgba(45, 70, 88, 0.14);
+}
+
+.badge-media {
+  background: var(--priority-media-bg);
+  color: var(--priority-media-text);
+  border-color: rgba(44, 83, 108, 0.14);
+}
+
+/* Prioridad alta / aviso — misma familia navy */
+.badge-warning,
+.badge-alta {
+  background: var(--priority-alta-bg);
+  color: var(--priority-alta-text);
+  border-color: rgba(18, 48, 71, 0.16);
+}
+
+/* Soporte sobrio */
+.badge-success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+  border-color: rgba(42, 95, 72, 0.15);
+}
+
+.badge-danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border-color: rgba(122, 64, 64, 0.15);
+}
+
+.badge-default,
+.badge-neutral,
+.badge-baja {
+  background: var(--color-neutral-bg);
+  color: var(--color-neutral-text);
+  border-color: rgba(77, 93, 107, 0.14);
+}

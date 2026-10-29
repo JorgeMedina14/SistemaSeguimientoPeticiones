@@ -1,5 +1,5 @@
 const { getPool } = require('../db/pool');
-const sql = require('mssql');
+const sql = require('../db/sql');
 
 const findCiudadanoByDPI = async (dpi) => {
   const pool = await getPool();
@@ -46,11 +46,7 @@ const generateCodigoPeticion = async (transaction) => {
       WHERE Anio = @anio
     `);
   
-  const correlativo = resultSecuencia.recordset[0].CorrelativoActual;
-  const correlativoPadded = correlativo.toString().padStart(6, '0');
-  const codigo = `JAL-${anioActual}-${correlativoPadded}`;
-  
-  return codigo;
+  return `JAL-${anioActual}-${resultSecuencia.recordset[0].CorrelativoActual.toString().padStart(6, '0')}`;
 };
 
 const createPeticion = async (transaction, peticionData) => {
@@ -147,59 +143,36 @@ const deletePeticion = async (idPeticion) => {
   return result.rowsAffected[0] > 0;
 };
 
-const listPeticiones = async (filtros, idDepartamentoUsuario) => {
-  const pool = await getPool();
-  
-  const { page, limit, estado, prioridad, departamento, fechaInicio, fechaFin, q } = filtros;
-  
-  let whereConditions = [];
-  const request = pool.request();
-  
-  if (idDepartamentoUsuario) {
-    whereConditions.push('p.IdDepartamento = @idDepartamentoUsuario');
-    request.input('idDepartamentoUsuario', sql.Int, idDepartamentoUsuario);
-  }
-  
-  if (estado) {
-    whereConditions.push('p.Estado = @estado');
-    request.input('estado', sql.VarChar(20), estado);
-  }
-  
-  if (prioridad) {
-    whereConditions.push('p.Prioridad = @prioridad');
-    request.input('prioridad', sql.VarChar(10), prioridad);
-  }
-  
-  if (departamento) {
-    whereConditions.push('p.IdDepartamento = @departamento');
-    request.input('departamento', sql.Int, departamento);
-  }
-  
+const bindFiltrosPeticion = (request, filtros, idDepartamentoUsuario) => {
+  const { estado, prioridad, departamento, fechaInicio, fechaFin, q } = filtros;
+  if (idDepartamentoUsuario) request.input('idDepartamentoUsuario', sql.Int, idDepartamentoUsuario);
+  if (estado) request.input('estado', sql.VarChar(20), estado);
+  if (prioridad) request.input('prioridad', sql.VarChar(10), prioridad);
+  if (departamento) request.input('departamento', sql.Int, departamento);
   if (fechaInicio && fechaFin) {
-    whereConditions.push('p.FechaCreacion BETWEEN @fechaInicio AND @fechaFin');
     request.input('fechaInicio', sql.Date, fechaInicio);
     request.input('fechaFin', sql.Date, fechaFin);
   }
-  
-  if (q) {
-    whereConditions.push('(p.Codigo LIKE @q OR p.Titulo LIKE @q OR c.DPI LIKE @q)');
-    request.input('q', sql.NVarChar(200), `%${q}%`);
-  }
-  
+  if (q) request.input('q', sql.NVarChar(200), `%${q}%`);
+  return request;
+};
+
+const listPeticiones = async (filtros, idDepartamentoUsuario) => {
+  const pool = await getPool();
+
+  const { page, limit, estado, prioridad, departamento, fechaInicio, fechaFin, q } = filtros;
+
+  const whereConditions = [];
+  if (idDepartamentoUsuario) whereConditions.push('p.IdDepartamento = @idDepartamentoUsuario');
+  if (estado) whereConditions.push('p.Estado = @estado');
+  if (prioridad) whereConditions.push('p.Prioridad = @prioridad');
+  if (departamento) whereConditions.push('p.IdDepartamento = @departamento');
+  if (fechaInicio && fechaFin) whereConditions.push('p.FechaCreacion BETWEEN @fechaInicio AND @fechaFin');
+  if (q) whereConditions.push('(p.Codigo LIKE @q OR p.Titulo LIKE @q OR c.DPI LIKE @q)');
+
   const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
-  
-  const countRequest = pool.request();
-  if (idDepartamentoUsuario) {
-    countRequest.input('idDepartamentoUsuario', sql.Int, idDepartamentoUsuario);
-  }
-  if (estado) countRequest.input('estado', sql.VarChar(20), estado);
-  if (prioridad) countRequest.input('prioridad', sql.VarChar(10), prioridad);
-  if (departamento) countRequest.input('departamento', sql.Int, departamento);
-  if (fechaInicio && fechaFin) {
-    countRequest.input('fechaInicio', sql.Date, fechaInicio);
-    countRequest.input('fechaFin', sql.Date, fechaFin);
-  }
-  if (q) countRequest.input('q', sql.NVarChar(200), `%${q}%`);
+  const request = bindFiltrosPeticion(pool.request(), filtros, idDepartamentoUsuario);
+  const countRequest = bindFiltrosPeticion(pool.request(), filtros, idDepartamentoUsuario);
   
   const countResult = await countRequest.query(`
     SELECT COUNT(*) AS Total

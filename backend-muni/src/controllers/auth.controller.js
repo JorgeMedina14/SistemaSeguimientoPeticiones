@@ -1,5 +1,13 @@
 const authService = require('../services/auth.service');
 
+const fail = (res, error) => {
+  const status = error.status || 500;
+  return res.status(status).json({
+    success: false,
+    message: error.message || 'Error en el servidor'
+  });
+};
+
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -19,34 +27,19 @@ const login = async (req, res) => {
       data: result
     });
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error en el servidor';
-
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error);
   }
 };
 
 const getMe = async (req, res) => {
   try {
-    const { idUsuario } = req.user;
-
-    const user = await authService.getProfile(idUsuario);
-
+    const user = await authService.getProfile(req.user.idUsuario);
     return res.status(200).json({
       success: true,
       data: user
     });
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error en el servidor';
-
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error);
   }
 };
 

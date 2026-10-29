@@ -1,7 +1,7 @@
 const departamentosRepository = require('../repositories/departamentos.repository');
 
 const listarDepartamentos = async () => {
-  return await departamentosRepository.findAllDepartamentos();
+  return departamentosRepository.findAllDepartamentos();
 };
 
 module.exports = {

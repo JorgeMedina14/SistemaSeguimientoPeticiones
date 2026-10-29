@@ -1,8 +1,22 @@
 const { getPool } = require('../db/pool');
-const sql = require('mssql');
+const sql = require('../db/sql');
 const peticionesRepository = require('../repositories/peticiones.repository');
 
 const ESTADOS_VALIDOS = ['RECIBIDA', 'EN_REVISION', 'ASIGNADA', 'EN_PROCESO', 'RESUELTA', 'RECHAZADA', 'CERRADA'];
+
+const withTransaction = async (work) => {
+  const pool = await getPool();
+  const transaction = new sql.Transaction(pool);
+  try {
+    await transaction.begin();
+    const result = await work(transaction);
+    await transaction.commit();
+    return result;
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+};
 
 const crearPeticion = async (data, idUsuario) => {
   const { ciudadano, peticion, idDepartamento } = data;
@@ -28,20 +42,11 @@ const crearPeticion = async (data, idUsuario) => {
     throw { status: 400, message: 'Prioridad debe ser BAJA, MEDIA o ALTA' };
   }
 
-  const pool = await getPool();
-  const transaction = new sql.Transaction(pool);
-
-  try {
-    await transaction.begin();
-
-    let idCiudadano;
+  return withTransaction(async (transaction) => {
     const ciudadanoExistente = await peticionesRepository.findCiudadanoByDPI(ciudadano.dpi);
-
-    if (ciudadanoExistente) {
-      idCiudadano = ciudadanoExistente.IdCiudadano;
-    } else {
-      idCiudadano = await peticionesRepository.createCiudadano(transaction, ciudadano);
-    }
+    const idCiudadano = ciudadanoExistente
+      ? ciudadanoExistente.IdCiudadano
+      : await peticionesRepository.createCiudadano(transaction, ciudadano);
 
     const codigo = await peticionesRepository.generateCodigoPeticion(transaction);
 
@@ -62,8 +67,6 @@ const crearPeticion = async (data, idUsuario) => {
       comentario: 'Petición creada y recibida en el sistema'
     });
 
-    await transaction.commit();
-
     return {
       idPeticion: peticionCreada.IdPeticion,
       codigo: peticionCreada.Codigo,
@@ -72,11 +75,7 @@ const crearPeticion = async (data, idUsuario) => {
       fechaCreacion: peticionCreada.FechaCreacion,
       idCiudadano
     };
-
-  } catch (error) {
-    await transaction.rollback();
-    throw error;
-  }
+  });
 };
 
 const cambiarEstadoPeticion = async (idPeticion, estadoNuevo, comentario, usuario) => {
@@ -111,12 +110,7 @@ const cambiarEstadoPeticion = async (idPeticion, estadoNuevo, comentario, usuari
     }
   }
 
-  const pool = await getPool();
-  const transaction = new sql.Transaction(pool);
-
-  try {
-    await transaction.begin();
-
+  return withTransaction(async (transaction) => {
     await peticionesRepository.updateEstadoPeticion(transaction, idPeticion, estadoNuevo);
 
     await peticionesRepository.createSeguimiento(transaction, {
@@ -127,17 +121,11 @@ const cambiarEstadoPeticion = async (idPeticion, estadoNuevo, comentario, usuari
       comentario: comentario || null
     });
 
-    await transaction.commit();
-
     return {
       estadoAnterior: peticion.Estado,
       estadoNuevo
     };
-
-  } catch (error) {
-    await transaction.rollback();
-    throw error;
-  }
+  });
 };
 
 const listarPeticiones = async (query, usuario) => {
@@ -171,8 +159,7 @@ const listarPeticiones = async (query, usuario) => {
     q
   };
   
-  const resultado = await peticionesRepository.listPeticiones(filtros, idDepartamentoUsuario);
-  return resultado;
+  return peticionesRepository.listPeticiones(filtros, idDepartamentoUsuario);
 };
 
 const obtenerDetallePeticion = async (idPeticion, usuario) => {

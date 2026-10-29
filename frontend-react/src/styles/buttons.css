@@ -1,0 +1,111 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  font-weight: 650;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+  background: #fff;
+  color: var(--color-text);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary {
+  background: var(--navy-800);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--navy-950);
+  color: #fff;
+}
+
+.btn-accent {
+  background: var(--navy-700);
+  color: #fff;
+}
+.btn-accent:hover:not(:disabled) {
+  background: var(--navy-800);
+  color: #fff;
+}
+
+.btn-secondary,
+.btn-outline {
+  background: #fff;
+  color: var(--navy-800);
+  border-color: var(--color-border);
+}
+.btn-secondary:hover:not(:disabled),
+.btn-outline:hover:not(:disabled) {
+  background: var(--navy-50);
+  border-color: var(--navy-500);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--navy-700);
+  border-color: transparent;
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--navy-100);
+  color: var(--navy-800);
+  box-shadow: none;
+}
+
+.btn-success,
+.btn-success-soft {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+  border-color: rgba(42, 95, 72, 0.18);
+}
+.btn-success:hover:not(:disabled),
+.btn-success-soft:hover:not(:disabled) {
+  background: #d0e8db;
+}
+
+.btn-danger,
+.btn-danger-soft {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border-color: rgba(122, 64, 64, 0.18);
+}
+.btn-danger:hover:not(:disabled),
+.btn-danger-soft:hover:not(:disabled) {
+  background: #e8d5d5;
+}
+
+.btn-sm {
+  min-height: 34px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.btn-block {
+  width: 100%;
+}

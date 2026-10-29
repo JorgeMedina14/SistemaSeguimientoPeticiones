@@ -1,128 +1,85 @@
 const peticionesService = require('../services/peticiones.service');
 
+const fail = (res, error, fallback) => {
+  const status = error.status || 500;
+  return res.status(status).json({
+    success: false,
+    message: error.message || fallback
+  });
+};
+
+const actor = (req) => ({
+  idUsuario: req.user.idUsuario,
+  rol: req.user.rol,
+  idDepartamento: req.user.idDepartamento
+});
+
 const crear = async (req, res) => {
   try {
-    const idUsuario = req.user.idUsuario;
-    const data = req.body;
-
-    const resultado = await peticionesService.crearPeticion(data, idUsuario);
-
+    const resultado = await peticionesService.crearPeticion(req.body, req.user.idUsuario);
     return res.status(201).json({
       success: true,
       message: 'Petición creada exitosamente',
       data: resultado
     });
-
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al crear la petición';
-
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error, 'Error al crear la petición');
   }
 };
 
 const cambiarEstado = async (req, res) => {
   try {
-    const idPeticion = parseInt(req.params.id);
     const { estadoNuevo, comentario } = req.body;
-    const usuario = {
-      idUsuario: req.user.idUsuario,
-      rol: req.user.rol,
-      idDepartamento: req.user.idDepartamento
-    };
-
-    const resultado = await peticionesService.cambiarEstadoPeticion(idPeticion, estadoNuevo, comentario, usuario);
-
+    const resultado = await peticionesService.cambiarEstadoPeticion(
+      parseInt(req.params.id),
+      estadoNuevo,
+      comentario,
+      actor(req)
+    );
     return res.status(200).json({
       success: true,
       message: 'Estado actualizado correctamente',
       estadoAnterior: resultado.estadoAnterior,
       estadoNuevo: resultado.estadoNuevo
     });
-
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al cambiar el estado de la petición';
-
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error, 'Error al cambiar el estado de la petición');
   }
 };
 
 const listar = async (req, res) => {
   try {
-    const usuario = {
-      rol: req.user.rol,
-      idDepartamento: req.user.idDepartamento
-    };
-    
-    const resultado = await peticionesService.listarPeticiones(req.query, usuario);
-    
+    const resultado = await peticionesService.listarPeticiones(req.query, actor(req));
     return res.status(200).json({
       success: true,
       ...resultado
     });
-    
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al listar peticiones';
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error, 'Error al listar peticiones');
   }
 };
 
 const obtenerDetalle = async (req, res) => {
   try {
-    const idPeticion = parseInt(req.params.id);
-    const usuario = {
-      rol: req.user.rol,
-      idDepartamento: req.user.idDepartamento
-    };
-    
-    const detalle = await peticionesService.obtenerDetallePeticion(idPeticion, usuario);
-    
+    const detalle = await peticionesService.obtenerDetallePeticion(parseInt(req.params.id), actor(req));
     return res.status(200).json({
       success: true,
       data: detalle
     });
-    
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al obtener detalle de la petición';
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error, 'Error al obtener detalle de la petición');
   }
 };
 
 const eliminar = async (req, res) => {
   try {
-    const idPeticion = parseInt(req.params.id);
-    const resultado = await peticionesService.eliminarPeticion(idPeticion);
-    
+    const resultado = await peticionesService.eliminarPeticion(parseInt(req.params.id));
     return res.status(200).json({
       success: true,
       message: resultado.message
     });
-    
   } catch (error) {
-    const status = error.status || 500;
-    const message = error.message || 'Error al eliminar la petición';
-    
-    return res.status(status).json({
-      success: false,
-      message
-    });
+    return fail(res, error, 'Error al eliminar la petición');
   }
 };
 

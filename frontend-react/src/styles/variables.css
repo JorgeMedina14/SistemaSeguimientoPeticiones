@@ -1,0 +1,99 @@
+:root {
+  /* ——— Identidad: un solo eje de color ——— */
+  /* Navy = estructura | Gold = acento ceremonial | Neutrales = soporte */
+
+  --navy-950: #0b1c29;
+  --navy-900: #102a3c;
+  --navy-800: #123047;
+  --navy-700: #1a3f5a;
+  --navy-600: #24506e;
+  --navy-500: #2f6485;
+  --navy-100: #e8f0f6;
+  --navy-50: #f3f7fa;
+
+  --gold-700: #8a6f35;
+  --gold-600: #a38445;
+  --gold-500: #b8974e;
+  --gold-100: #f5edd9;
+  --gold-50: #faf6ec;
+
+  --color-primary: var(--navy-800);
+  --color-primary-700: var(--navy-950);
+  --color-primary-600: var(--navy-700);
+  --color-primary-500: var(--navy-600);
+  --color-primary-400: var(--navy-500);
+  --color-primary-light: var(--navy-600);
+  --color-primary-hover: var(--navy-950);
+
+  /* Acento institucional = navy (sin amarillo en el sistema) */
+  --color-accent: var(--navy-700);
+  --color-accent-hover: var(--navy-800);
+  --color-accent-soft: var(--navy-100);
+  --color-accent-deep: var(--navy-900);
+
+  --color-background: #e8eef3;
+  --color-surface: #ffffff;
+  --color-surface-soft: var(--navy-50);
+  --color-secondary: var(--navy-100);
+
+  --color-border: #c5d2de;
+  --color-border-soft: #dce5ec;
+
+  --color-text: #102030;
+  --color-text-soft: #3a4f61;
+  --color-muted: #617687;
+
+  /* Estados derivados de la misma familia (no semáforo saturado) */
+  --color-info-bg: #dceaf3;
+  --color-info-text: #1a4a66;
+
+  --color-success-bg: #ddeee6;
+  --color-success-text: #2a5f48;
+
+  --color-warning-bg: #e4ebf2;
+  --color-warning-text: #2c536c;
+
+  --color-danger-bg: #efe2e2;
+  --color-danger-text: #7a4040;
+
+  --color-neutral-bg: #e6ebf0;
+  --color-neutral-text: #4d5d6b;
+
+  --priority-alta-bg: #d8e5f0;
+  --priority-alta-text: #123047;
+  --priority-media-bg: #e4ebf2;
+  --priority-media-text: #2c536c;
+  --priority-baja-bg: #e6ebf0;
+  --priority-baja-text: #4d5d6b;
+
+  --sidebar-bg: var(--navy-900);
+  --sidebar-bg-2: var(--navy-800);
+  --sidebar-text: #d8e4ee;
+  --sidebar-muted: #8aa0b3;
+
+  --shadow-sm: 0 2px 10px rgba(16, 42, 60, 0.06);
+  --shadow-md: 0 14px 32px rgba(16, 42, 60, 0.1);
+  --shadow-lg: 0 24px 56px rgba(16, 42, 60, 0.14);
+
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+
+  --transition-fast: 160ms ease;
+  --transition-normal: 240ms ease;
+  --transition-slow: 320ms ease;
+
+  --header-height: 70px;
+  --sidebar-width: 272px;
+  --font-sans: 'Manrope', 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+  --content-max: 1280px;
+}
