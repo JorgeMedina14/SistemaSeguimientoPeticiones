@@ -3,7 +3,8 @@ FROM node:20-bookworm-slim
 WORKDIR /app
 
 COPY frontend-react/package.json frontend-react/package-lock.json ./frontend-react/
-RUN cd frontend-react && npm ci
+# Railway inyecta NODE_ENV=production durante la imagen. Sin esto, npm omite Vite.
+RUN cd frontend-react && npm ci --include=dev
 
 COPY frontend-react ./frontend-react
 ENV VITE_API_URL=
