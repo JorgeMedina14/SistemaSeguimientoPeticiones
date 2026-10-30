@@ -11,6 +11,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -19,6 +20,14 @@ body {
   color: var(--color-text);
   line-height: 1.6;
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 a {
@@ -87,6 +96,22 @@ ul { list-style: none; }
   font-size: 0.95rem;
   max-width: 42rem;
   font-weight: 550;
+  overflow-wrap: anywhere;
+}
+
+.page-header-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .stack {
@@ -119,6 +144,25 @@ ul { list-style: none; }
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+@media (max-width: 640px) {
+  .page-header h1 {
+    font-size: 1.35rem;
+    overflow-wrap: anywhere;
+  }
+
+  .page-header-split {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .page-header-actions,
+  .page-header-split > .btn,
+  .page-header-split > a,
+  .page-header-split > a .btn {
+    width: 100%;
+  }
 }
 
 @keyframes fadeUp {

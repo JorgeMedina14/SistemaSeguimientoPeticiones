@@ -21,7 +21,7 @@ export function Table({ columns, rows, emptyTitle = 'No hay registros' }) {
           {rows.map((row, idx) => (
             <tr key={row.id ?? row.key ?? idx}>
               {columns.map((col) => (
-                <td key={col.key}>
+                <td key={col.key} data-label={col.label || ''}>
                   {col.render ? col.render(row) : row[col.key]}
                 </td>
               ))}

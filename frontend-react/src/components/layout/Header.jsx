@@ -24,9 +24,9 @@ export function Header({ user, onLogout, onToggleSidebar }) {
             <span>{ROLE_LABELS[user?.rol] || user?.rol}</span>
           </div>
         </div>
-        <Button variant="ghost" size="sm" onClick={onLogout}>
+        <Button variant="ghost" size="sm" className="header-logout" onClick={onLogout} aria-label="Salir">
           <LogOut size={15} />
-          Salir
+          <span className="header-logout-label">Salir</span>
         </Button>
       </div>
     </header>

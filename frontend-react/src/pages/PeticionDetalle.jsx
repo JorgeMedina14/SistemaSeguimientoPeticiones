@@ -100,12 +100,12 @@ export default function PeticionDetalle() {
 
   return (
     <div className="stack page-enter">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+      <div className="page-header page-header-split">
         <div>
           <h1>{peticion.codigo || `Petición #${peticion.idPeticion}`}</h1>
           <p>{peticion.titulo}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div className="page-header-actions">
           <Link to="/peticiones"><Button variant="secondary">Volver</Button></Link>
           {canDeletePeticion(user?.rol) && (
             <ActionMenu
@@ -185,7 +185,7 @@ export default function PeticionDetalle() {
           <div className="timeline">
             {peticion.historial.map((item) => (
               <div key={item.idSeguimiento} className="timeline-item">
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+                <div className="timeline-head">
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <Badge tone={getEstadoBadge(item.estadoAnterior)}>{formatEstado(item.estadoAnterior)}</Badge>
                     <span>→</span>

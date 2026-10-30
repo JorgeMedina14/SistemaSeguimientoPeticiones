@@ -514,6 +514,12 @@
   .login-page {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
+    overflow-x: hidden;
+  }
+
+  .login-slogan-main:first-of-type::before,
+  .login-slogan-main:first-of-type::after {
+    display: none;
   }
 
   .login-side {
@@ -529,14 +535,31 @@
   .login-slogan {
     font-size: clamp(2.2rem, 11vw, 3.4rem);
   }
-
-  .login-slogan-main:first-of-type::before,
-  .login-slogan-main:first-of-type::after {
-    height: 10px;
-  }
 }
 
 @media (max-width: 480px) {
+  .login-side {
+    padding: 28px 16px 32px;
+  }
+
+  .login-form {
+    gap: 18px;
+  }
+
+  .login-institutional {
+    gap: 20px;
+    padding: 28px 16px 32px;
+  }
+
+  .login-slogan {
+    font-size: 2rem;
+    max-width: 100%;
+  }
+
+  .login-input input {
+    font-size: 16px;
+  }
+
   .login-options {
     align-items: flex-start;
     flex-direction: column;

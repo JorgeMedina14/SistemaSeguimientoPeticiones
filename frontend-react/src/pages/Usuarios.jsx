@@ -148,7 +148,7 @@ export default function Usuarios() {
 
   return (
     <div className="stack page-enter">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+      <div className="page-header page-header-split">
         <div>
           <h1>Usuarios</h1>
           <p>Administración de cuentas y roles</p>

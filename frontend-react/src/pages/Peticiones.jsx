@@ -72,7 +72,7 @@ export default function Peticiones() {
 
   return (
     <div className="stack page-enter">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+      <div className="page-header page-header-split">
         <div>
           <h1>Peticiones</h1>
           <p>Consulta, filtro y seguimiento de solicitudes ciudadanas</p>
